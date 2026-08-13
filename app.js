@@ -2460,12 +2460,3 @@ window.onload =
       true;
 
   };
-  function abrirMenu() {
-    document.getElementById("sidebar").classList.add("menu-abierto");
-    document.getElementById("overlay").classList.add("overlay-activo");
-}
-
-function cerrarMenu() {
-    document.getElementById("sidebar").classList.remove("menu-abierto");
-    document.getElementById("overlay").classList.remove("overlay-activo");
-}
