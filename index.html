@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Niebla IA</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- MENÚ -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        🌫️ <span>Niebla IA</span>
+        <button class="cerrar-menu" onclick="cerrarMenu()">✕</button>
+    </div>
+
+    <button onclick="mostrar('inicio'); cerrarMenu()">
+        <i data-lucide="house"></i>
+        <span>Inicio</span>
+    </button>
+
+    <button onclick="mostrar('pronostico'); cerrarMenu()">
+        <i data-lucide="cloud-fog"></i>
+        <span>Pronóstico</span>
+    </button>
+
+    <button onclick="mostrar('mapa'); cerrarMenu()">
+        <i data-lucide="map"></i>
+        <span>Mapa</span>
+    </button>
+
+    <button onclick="mostrar('chat'); cerrarMenu()">
+        <i data-lucide="bot"></i>
+        <span>Nebulax</span>
+    </button>
+
+    <button onclick="mostrar('conductor'); cerrarMenu()">
+        <i data-lucide="car"></i>
+        <span>Conductor</span>
+    </button>
+
+    <button onclick="mostrar('registros'); cerrarMenu()">
+        <i data-lucide="table-properties"></i>
+        <span>Informes</span>
+    </button>
+
+    <button onclick="mostrar('ajustes'); cerrarMenu()">
+        <i data-lucide="settings"></i>
+        <span>Ajustes</span>
+    </button>
+
+</aside>
+
+<div class="overlay" id="overlay" onclick="cerrarMenu()"></div>
+
+<button class="menu-mobile" onclick="abrirMenu()" id="menuMobile">
+    ☰
+</button>
+    
+
+    <!-- CONTENIDO -->
+<main class="contenido">
+
+  <!-- INICIO -->
+  <section id="inicio" class="pantalla">
+<h2 id="bienvenidaInicio">¡Bienvenido!</h2>
+    <header class="topbar">
+      <div class="top-left">
+        <h2>Dashboard</h2>
+        <p>Actualizado hace <span id="ultimaActualizacion">2 minutos</span></p>
+      </div>
+
+      <div class="top-right">
+        <select id="selectorLocalidad">
+          <option>📍 Estación Aráoz</option>
+          <option>📍 Tacanas</option>
+          <option>📍 Ranchillos</option>
+          <option>📍 Lastenia</option>
+        </select>
+
+        <button class="icon-btn">🔔</button>
+        <button class="icon-btn">🌙</button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero-card">
+      <div class="hero-info">
+        <h1 id="temp">18°C</h1>
+        <h2 id="estadoNiebla">🌫️ Niebla Moderada</h2>
+        <p id="ubicacionActual">📍 Estación Aráoz - Tucumán</p>
+
+        <div class="maxmin">
+          <span>⬆ Máx 21°C</span>
+          <span>⬇ Mín 13°C</span>
+        </div>
+      </div>
+
+      <div class="hero-icon">🌫️</div>
+
+      <div class="hero-riesgo">
+        <h4>RIESGO DE NIEBLA</h4>
+
+        <div class="riesgo-header">
+          <span class="estado">ALTO</span>
+          <span class="porcentaje" id="riesgo">82%</span>
+        </div>
+
+        <div class="barra-riesgo">
+          <div class="barra"></div>
+        </div>
+
+        <p class="riesgo-texto">
+          Alta probabilidad de formación de niebla durante las próximas horas.
+        </p>
+
+        <small>Confianza IA: <strong>96%</strong></small>
+      </div>
+    </section>
+
+    <!-- GRID -->
+    <section class="grid">
+      <div class="card"><h3>💧 Humedad</h3><h2 id="humedad">95%</h2></div>
+      <div class="card"><h3>🌬️ Viento</h3><h2 id="viento">8 km/h</h2></div>
+      <div class="card"><h3>👁️ Visibilidad</h3><h2 id="visibilidad">180 m</h2></div>
+      <div class="card"><h3>🌡️ Punto de rocío</h3><h2 id="puntoRocio">13°C</h2></div>
+      <div class="card"><h3>☀️ UV</h3><h2 id="uv">3</h2></div>
+      <div class="card"><h3>🌤️ Presión</h3><h2 id="presion">1017 hPa</h2></div>
+    </section>
+
+      </section>
+  <!-- OTRAS PANTALLAS -->
+  <section id="mapa" class="pantalla oculto">
+  <h2>🗺️ Mapa</h2>
+  <div id="mapaContainer" style="height: 400px;"></div>
+</section>
+
+  <section id="pronostico" class="pantalla oculto">
+
+  <div class="pronostico-header">
+    <h2>📅 Pronóstico por horas</h2>
+    <p>Actualizado en tiempo real</p>
+  </div>
+
+  <div id="forecastContainer" class="forecast-pro"></div>
+
+</section>
+  
+ <section id="chat" class="pantalla oculto">
+
+  <div class="chat-container">
+
+    <div class="chat-header">
+      🤖 Nebulax
+      <button onclick="escuchar()">🎤</button>
+    </div>
+
+    <div id="chatMensajes" class="chat-mensajes"></div>
+
+    <div class="chat-input">
+      <input id="pregunta" placeholder="Escribí un mensaje..." />
+      <button onclick="preguntarIA()">Enviar</button>
+    </div>
+
+    <div id="textoEscuchado" class="chat-voz"></div>
+  </div>
+
+
+</section>
+  <!-- CONDUCTOR -->
+<section id="conductor" class="pantalla oculto">
+  <div class="conductor-card">
+
+    <h2>🚗 Modo Conductor</h2>
+
+    <div id="estadoConduccion" class="estado-conduccion">--</div>
+    <div id="consejoConduccion" class="consejo-conduccion">--</div>
+
+    <div class="info-conductor">
+      <p>👁️ Visibilidad: <span id="visibilidadConduccion">--</span></p>
+      <p>📍 Estado de zona: <span id="zonaConduccion">--</span></p>
+    </div>
+
+    <button onclick="verEstimacion()" class="btn-conductor">📊 Ver estimación</button>
+    <button onclick="abrirCamara()" class="btn-conductor">📷 Cámara</button>
+
+    <input type="file" id="camaraInput" accept="image/*" capture="environment" style="display:none">
+
+    <div id="resultadoEstimacion"></div>
+
+  </div>
+</section>
+
+<!-- REGISTROS -->
+<section id="registros" class="pantalla oculto">
+  <h2>📊 Registros</h2>
+
+  <img src="niebla.jpg" alt="Registro de niebla">
+
+  <div class="registro-texto">
+    <h3>🌫️ Curiosidades sobre la niebla</h3>
+
+    <ul>
+      <li>La niebla es más frecuente en otoño e invierno.</li>
+      <li>Se forma cuando la humedad supera el 95%.</li>
+      <li>Las madrugadas y primeras horas del día son las más propensas.</li>
+      <li>Es más común en valles y zonas bajas.</li>
+      <li>Se necesita aire frío + humedad alta para formarse.</li>
+      <li>La niebla densa reduce la visibilidad a menos de 200m.</li>
+      <li>El rocío es un precursor común de la niebla.</li>
+      <li>En zonas rurales aparece más que en ciudades.</li>
+      <li>El viento fuerte normalmente la disipa.</li>
+      <li>Puede ser peligrosa para conducción y aviación.</li>
+    </ul>
+  <div class="registro-input">
+  <input id="inputCuriosidad" placeholder="Escribí una curiosidad..." />
+  <button onclick="agregarCuriosidad()">Agregar</button>
+</div>
+
+<div id="listaCuriosidades"></div>
+
+</section>
+
+<!-- AJUSTES -->
+<section id="ajustes" class="pantalla oculto">
+  <h2>⚙️ Configuración</h2>
+
+  <div class="opcion-config">
+    <label>Color</label><br>
+    <input type="color" id="colorPicker" onchange="cambiarColor(this.value)">
+  </div>
+
+  <div class="opcion-config">
+    <label>Nombre</label><br>
+    <input type="text" id="inputNombre" placeholder="Escribí tu nombre">
+    <button onclick="guardarNombre()">Guardar</button>
+  </div>
+</section>
+
+<script src="app.js"></script>
+
+<script>
+lucide.createIcons();
+</script>
+
+</body>
+</html>
