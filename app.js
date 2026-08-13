@@ -2463,9 +2463,174 @@ window.onload =
 function abrirMenu() {
     document.getElementById("sidebar").classList.add("activo");
     document.getElementById("overlay").classList.add("activo");
+    document.getElementById("menuMobile").style.display = "none";
 }
 
 function cerrarMenu() {
     document.getElementById("sidebar").classList.remove("activo");
     document.getElementById("overlay").classList.remove("activo");
+    document.getElementById("menuMobile").style.display = "flex";
 }
+// =========================
+// 📲 INSTALAR NIEBLA IA
+// =========================
+
+let eventoInstalacion = null;
+
+const botonInstalar = document.getElementById("instalarApp");
+
+// Detectar si el navegador permite instalar la PWA
+window.addEventListener("beforeinstallprompt", (e) => {
+
+    e.preventDefault();
+
+    eventoInstalacion = e;
+
+    const boton = document.getElementById("instalarApp");
+
+    if (boton) {
+        boton.style.display = "block";
+    }
+
+    console.log("📲 Niebla IA puede instalarse");
+});
+
+
+// Botón instalar
+document.addEventListener("click", async (e) => {
+
+    if (e.target.closest("#instalarApp") === null) {
+        return;
+    }
+
+    const boton = document.getElementById("instalarApp");
+
+    if (!eventoInstalacion) {
+
+        alert(
+            "La instalación no está disponible todavía. " +
+            "Abrí Niebla IA desde HTTPS y usá un navegador compatible."
+        );
+
+        return;
+    }
+
+    eventoInstalacion.prompt();
+
+    const resultado =
+        await eventoInstalacion.userChoice;
+
+    console.log(
+        "Resultado de instalación:",
+        resultado.outcome
+    );
+
+    eventoInstalacion = null;
+
+    if (boton) {
+        boton.style.display = "none";
+    }
+
+});
+
+
+// Cuando se instala
+window.addEventListener("appinstalled", () => {
+
+    console.log("🌫️ Niebla IA instalada");
+
+    const boton =
+        document.getElementById("instalarApp");
+
+    if (boton) {
+        boton.style.display = "none";
+    }
+
+});
+// =========================
+// 🔧 SERVICE WORKER
+// =========================
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker
+            .register("./service-worker.js")
+            .then(() => {
+                console.log("✅ Service Worker registrado");
+            })
+            .catch(error => {
+                console.error(
+                    "❌ Error Service Worker:",
+                    error
+                );
+            });
+
+    });
+
+}
+// =========================
+// 📲 INSTALAR PWA
+// =========================
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+
+    console.log("✅ PWA INSTALABLE");
+
+    e.preventDefault();
+
+    deferredPrompt = e;
+
+    const boton = document.getElementById("instalarApp");
+
+    if (boton) {
+        boton.style.display = "block";
+    }
+});
+
+
+document.addEventListener("click", async (e) => {
+
+    const boton = e.target.closest("#instalarApp");
+
+    if (!boton) return;
+
+    console.log("🟦 Botón instalar presionado");
+
+    if (!deferredPrompt) {
+
+        alert(
+            "Niebla IA todavía no está disponible para instalar en este navegador."
+        );
+
+        return;
+    }
+
+    deferredPrompt.prompt();
+
+    const { outcome } =
+        await deferredPrompt.userChoice;
+
+    console.log("Resultado:", outcome);
+
+    deferredPrompt = null;
+
+    boton.style.display = "none";
+});
+
+
+window.addEventListener("appinstalled", () => {
+
+    console.log("✅ Niebla IA instalada");
+
+    const boton =
+        document.getElementById("instalarApp");
+
+    if (boton) {
+        boton.style.display = "none";
+    }
+
+});

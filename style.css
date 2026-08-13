@@ -1237,3 +1237,32 @@ input[type="color"] {
     }
 
 }
+.btn-instalar {
+    width: 100%;
+    padding: 14px 20px;
+
+    border: none;
+    border-radius: 15px;
+
+    background: #3f83ff;
+    color: white;
+
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 8px 25px rgba(63,131,255,.3);
+
+    transition: .25s;
+}
+
+.btn-instalar:hover {
+    transform: translateY(-2px);
+    opacity: .9;
+}
+
+.btn-instalar:active {
+    transform: scale(.98);
+}
